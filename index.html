@@ -770,8 +770,8 @@
     }
 
     .step-marker {
-      width: 56px;
-      height: 56px;
+      width: 60px;
+      height: 60px;
       margin: 0 auto 20px;
       display: flex;
       align-items: center;
@@ -779,23 +779,45 @@
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       font-size: 16px;
-      border: 2px solid var(--cyan);
-      background: var(--void);
       color: var(--cyan);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      position: relative;
+      z-index: 1;
       transition: all 0.4s ease;
     }
 
-    .process-step:hover .step-marker {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px var(--glow-cyan);
+    /* Hexagon via inline SVG in HTML — replaced below */
+    .hex-border {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
     }
 
-    .process-step:nth-child(2) .step-marker { border-color: var(--magenta); color: var(--magenta); }
-    .process-step:nth-child(3) .step-marker { border-color: var(--violet); color: var(--violet); }
-    .process-step:nth-child(4) .step-marker { border-color: var(--green); color: var(--green); }
-    .process-step:nth-child(5) .step-marker { border-color: var(--cyan); color: var(--cyan); }
-    .process-step:nth-child(6) .step-marker { border-color: var(--magenta); color: var(--magenta); }
+    .hex-border polygon {
+      fill: var(--void);
+      stroke: var(--cyan);
+      stroke-width: 2;
+    }
+
+    .step-marker .num {
+      position: relative;
+      z-index: 2;
+    }
+
+    .process-step:hover .step-marker {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 12px var(--glow-cyan));
+    }
+
+    .process-step:nth-child(2) .step-marker { color: var(--magenta); }
+    .process-step:nth-child(2) .hex-border polygon { stroke: var(--magenta); }
+    .process-step:nth-child(3) .step-marker { color: var(--violet); }
+    .process-step:nth-child(3) .hex-border polygon { stroke: var(--violet); }
+    .process-step:nth-child(4) .step-marker { color: var(--green); }
+    .process-step:nth-child(4) .hex-border polygon { stroke: var(--green); }
+    .process-step:nth-child(5) .step-marker { color: var(--cyan); }
+    .process-step:nth-child(5) .hex-border polygon { stroke: var(--cyan); }
+    .process-step:nth-child(6) .step-marker { color: var(--magenta); }
+    .process-step:nth-child(6) .hex-border polygon { stroke: var(--magenta); }
 
     .step-title {
       font-family: 'Clash Display', sans-serif;
@@ -1557,32 +1579,32 @@
 
     <div class="process-grid reveal">
       <div class="process-step">
-        <div class="step-marker">01</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">01</span></div>
         <h4 class="step-title">Audience Intel</h4>
         <p class="step-desc">Deep quote mining, ICP validation, proprietary intelligence layer built around your brand</p>
       </div>
       <div class="process-step">
-        <div class="step-marker">02</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">02</span></div>
         <h4 class="step-title">Compliance</h4>
         <p class="step-desc">Your account gets compliance scoring, risk management, and ultra-fast ban recovery</p>
       </div>
       <div class="process-step">
-        <div class="step-marker">03</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">03</span></div>
         <h4 class="step-title">Creative Testing</h4>
         <p class="step-desc">Your creative pipeline runs on desire + angle testing that never stops</p>
       </div>
       <div class="process-step">
-        <div class="step-marker">04</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">04</span></div>
         <h4 class="step-title">Unit Economics</h4>
         <p class="step-desc">Your offer, COGS, NCAC, and CM — every profitability lever gets pulled</p>
       </div>
       <div class="process-step">
-        <div class="step-marker">05</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">05</span></div>
         <h4 class="step-title">Offer Strategy</h4>
         <p class="step-desc">Your pricing, bundles, subscriptions, and landing pages get proactive fixes</p>
       </div>
       <div class="process-step">
-        <div class="step-marker">06</div>
+        <div class="step-marker"><svg class="hex-border" viewBox="0 0 60 60"><polygon points="30,2 58,16 58,44 30,58 2,44 2,16"/></svg><span class="num">06</span></div>
         <h4 class="step-title">Retention & LTV</h4>
         <p class="step-desc">Your post-purchase flows, winback sequences, and subscription retention get optimized</p>
       </div>
