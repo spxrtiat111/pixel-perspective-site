@@ -814,85 +814,84 @@
     }
 
     /* ═══════════════════════════════════════════
-       TESTIMONIALS (EXPANDED)
+       CASE STUDY
        ═══════════════════════════════════════════ */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+    .case-study-wrap {
       margin-top: 64px;
-    }
-
-    .testimonial-card {
-      background: var(--glass);
       border: 1px solid var(--glass-border);
-      padding: 48px 40px;
       position: relative;
       overflow: hidden;
-      transition: all 0.4s ease;
     }
 
-    .testimonial-card:hover {
-      border-color: rgba(0,240,255,0.1);
-      background: rgba(255,255,255,0.05);
+    .case-study-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta));
     }
 
-    .testimonial-card.featured {
-      grid-column: span 2;
+    .case-study-header {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0;
-      padding: 0;
+      border-bottom: 1px solid var(--glass-border);
     }
 
-    .featured-visual {
-      background: linear-gradient(135deg, var(--slate), var(--void));
-      padding: 60px 48px;
+    .case-study-context {
+      padding: 48px 44px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
     }
 
-    .featured-visual::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 200px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.04));
-      pointer-events: none;
-    }
-
-    .case-brand {
-      font-family: 'Clash Display', sans-serif;
-      font-weight: 700;
-      font-size: 36px;
-      letter-spacing: -1px;
-      color: var(--ghost);
-      margin-bottom: 6px;
-    }
-
-    .case-category {
+    .case-study-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--cyan);
-      margin-bottom: 32px;
+      margin-bottom: 16px;
     }
 
-    .case-stat-row {
+    .case-study-brand {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      color: var(--ghost);
+      margin-bottom: 8px;
+    }
+
+    .case-study-category {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 15px;
+      color: var(--steel);
+      line-height: 1.5;
+    }
+
+    .case-study-stats {
+      padding: 48px 44px;
+      border-left: 1px solid var(--glass-border);
       display: flex;
-      gap: 40px;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+      background: linear-gradient(135deg, var(--glass), transparent);
+    }
+
+    .case-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
     }
 
     .case-stat-value {
       font-family: 'Clash Display', sans-serif;
       font-weight: 700;
-      font-size: 32px;
+      font-size: 36px;
       color: var(--green);
+      line-height: 1;
     }
 
     .case-stat-label {
@@ -901,41 +900,245 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--steel);
-      margin-top: 4px;
     }
 
-    .featured-content {
-      padding: 60px 48px;
-      border-left: 1px solid var(--charcoal);
+    .case-study-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .case-study-before,
+    .case-study-after {
+      padding: 44px;
+    }
+
+    .case-study-before {
+      border-right: 1px solid var(--glass-border);
+      position: relative;
+    }
+
+    .case-col-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .case-study-before .case-col-label { color: var(--magenta); }
+    .case-study-after .case-col-label { color: var(--green); }
+
+    .case-col-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ghost);
+      margin-bottom: 16px;
+    }
+
+    .case-study-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      gap: 14px;
     }
 
-    .testimonial-quote {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 500;
-      font-size: 18px;
+    .case-study-list li {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 14px;
       line-height: 1.6;
-      color: var(--ghost);
-      margin-bottom: 24px;
+      color: var(--steel);
+      padding-left: 20px;
       position: relative;
-      padding-left: 24px;
-      border-left: 2px solid var(--cyan);
     }
 
-    .testimonial-card:nth-child(2) .testimonial-quote { border-left-color: var(--violet); }
-    .testimonial-card:nth-child(3) .testimonial-quote { border-left-color: var(--magenta); }
+    .case-study-before .case-study-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--magenta);
+      font-weight: 700;
+    }
 
-    .testimonial-attribution {
+    .case-study-after .case-study-list li::before {
+      content: '+';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .case-study-footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 36px 44px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .case-study-footer-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--steel);
+      white-space: nowrap;
+    }
+
+    .case-deliverables {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .case-deliverable-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--glass-border);
+      color: var(--steel);
+      background: var(--glass);
+      transition: all 0.3s ease;
+    }
+
+    .case-deliverable-tag:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* ═══════════════════════════════════════════
+       TAILORED SECTION
+       ═══════════════════════════════════════════ */
+    .tailored-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .tailored-card {
+      display: flex;
+      gap: 24px;
+      padding: 36px 32px;
+      border-bottom: 1px solid var(--glass-border);
+      border-right: 1px solid var(--glass-border);
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .tailored-card:nth-child(2n) { border-right: none; }
+    .tailored-card:nth-last-child(-n+2) { border-bottom: none; }
+
+    .tailored-card:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .tailored-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--cyan);
+      transition: width 0.4s ease;
+    }
+
+    .tailored-card:hover::before { width: 100%; }
+
+    .tailored-icon {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      flex-shrink: 0;
+      opacity: 0.4;
+      line-height: 1;
+      padding-top: 2px;
+    }
+
+    .tailored-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--ghost);
+      margin-bottom: 8px;
+    }
+
+    .tailored-text {
       font-family: 'Satoshi', sans-serif;
       font-size: 14px;
       color: var(--steel);
+      line-height: 1.6;
     }
 
-    .testimonial-attribution strong {
+    /* ═══════════════════════════════════════════
+       THE SYSTEM SECTION
+       ═══════════════════════════════════════════ */
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 64px;
+    }
+
+    .system-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 40px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .system-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-4px);
+    }
+
+    .system-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--cyan);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .system-card:hover::after { opacity: 1; }
+
+    .system-card:nth-child(2)::after { background: var(--violet); }
+    .system-card:nth-child(3)::after { background: var(--magenta); }
+    .system-card:nth-child(4)::after { background: var(--green); }
+
+    .system-num {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 48px;
+      color: var(--charcoal);
+      line-height: 1;
+      margin-bottom: 16px;
+      transition: color 0.4s ease;
+    }
+
+    .system-card:hover .system-num { color: rgba(0,240,255,0.12); }
+
+    .system-name {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
       color: var(--ghost);
-      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .system-desc {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 13px;
+      color: var(--steel);
+      line-height: 1.6;
     }
 
     /* ═══════════════════════════════════════════
@@ -1328,8 +1531,13 @@
       .process-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
       .process-grid::before { display: none; }
       .about-grid, .faq-grid { grid-template-columns: 1fr; }
-      .testimonial-card.featured { grid-template-columns: 1fr; }
-      .featured-content { border-left: none; border-top: 1px solid var(--charcoal); }
+      .tailored-grid { grid-template-columns: 1fr; }
+      .tailored-card { border-right: none !important; }
+      .case-study-header,
+      .case-study-body { grid-template-columns: 1fr; }
+      .case-study-stats { border-left: none; border-top: 1px solid var(--glass-border); }
+      .case-study-before { border-right: none; border-bottom: 1px solid var(--glass-border); }
+      .system-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -1361,8 +1569,17 @@
       .services-grid,
       .benefits-grid { grid-template-columns: 1fr; }
       .process-grid { grid-template-columns: repeat(2, 1fr); }
-      .testimonials-grid { grid-template-columns: 1fr; }
-      .testimonial-card.featured { grid-column: span 1; }
+      .system-grid { grid-template-columns: 1fr; }
+      .case-study-header,
+      .case-study-body { grid-template-columns: 1fr; }
+      .case-study-stats { border-left: none; border-top: 1px solid var(--glass-border); }
+      .case-study-before { border-right: none; border-bottom: 1px solid var(--glass-border); }
+      .case-study-context,
+      .case-study-stats,
+      .case-study-before,
+      .case-study-after { padding: 32px 24px; }
+      .case-study-footer { flex-direction: column; align-items: flex-start; padding: 28px 24px; }
+      .case-stat-value { font-size: 28px; }
       .faq-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; gap: 40px; }
       .cta-section { padding: 100px 24px; }
@@ -1387,9 +1604,9 @@
       <li><a href="#benefits">Why Us</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#process">Process</a></li>
-      <li><a href="#results">Results</a></li>
+      <li><a href="#casestudy">Results</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="#contact" class="nav-cta">Let's Build</a></li>
+      <li><a href="#contact" class="nav-cta">Apply for a Spot</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -1405,7 +1622,7 @@
     <h1>Your Revenue<br>Engine, <span class="accent">Engineered</span><span class="accent-mag">.</span></h1>
     <p class="hero-sub">You get one senior operator — not a team of juniors. An AI-augmented system that produces 25+ creatives per day. Your entire revenue engine, managed as one machine, so you can scale without the chaos.</p>
     <div class="hero-actions">
-      <button class="btn-shimmer">Book a Strategy Call<span class="cursor-blink">_</span></button>
+      <button class="btn-shimmer">Apply for a Spot<span class="cursor-blink">_</span></button>
       <button class="btn-ghost">See How It Works</button>
     </div>
     <div class="hero-metric-bar">
@@ -1592,46 +1809,137 @@
   <!-- Diagonal Cut -->
   <div class="diagonal-cut"></div>
 
-  <!-- Testimonials Section (EXPANDED) -->
-  <section class="section process-bg" id="results">
+  <!-- Case Study Section -->
+  <section class="section process-bg" id="casestudy">
     <div class="reveal">
-      <span class="section-overline">Proof of Concept</span>
-      <h2 class="section-title">Results That Speak.</h2>
+      <span class="section-overline">Case Study</span>
+      <h2 class="section-title">What Happens When We<br>Get Inside a <span style="color:var(--cyan);">Brand</span>.</h2>
+      <p class="section-desc">A nerve health supplement brand came to us stagnating — no new creatives, no testing system, and ad spend bleeding with no direction. Here's what 2 weeks of our system looks like.</p>
     </div>
 
-    <div class="testimonials-grid">
-      <div class="testimonial-card featured reveal-child">
-        <div class="featured-visual">
-          <span class="case-category">Supplements &middot; DTC</span>
-          <h3 class="case-brand">[Client Name]</h3>
-          <div class="case-stat-row">
-            <div>
-              <div class="case-stat-value">+340%</div>
-              <div class="case-stat-label">ROAS Improvement</div>
-            </div>
-            <div>
-              <div class="case-stat-value">-52%</div>
-              <div class="case-stat-label">NCAC Reduction</div>
-            </div>
-            <div>
-              <div class="case-stat-value">500+</div>
-              <div class="case-stat-label">Creatives / Month</div>
-            </div>
-          </div>
+    <div class="case-study-wrap reveal">
+      <!-- Header: Context + Stats -->
+      <div class="case-study-header">
+        <div class="case-study-context">
+          <span class="case-study-label">Client // Nerve Health Supplement</span>
+          <h3 class="case-study-brand">From Stagnant to Systematic</h3>
+          <p class="case-study-category">A DTC supplement brand in the peripheral neuropathy space — burning ad spend on stale creatives with no testing framework, no audience intelligence, and no creative pipeline.</p>
         </div>
-        <div class="featured-content">
-          <p class="testimonial-quote">"They produced more creative in one week than our last agency did in a month. And they actually know why things work — not just that they work."</p>
-          <p class="testimonial-attribution"><strong>Founder Name</strong> — Brand, Category</p>
+        <div class="case-study-stats">
+          <div class="case-stat">
+            <span class="case-stat-value">24%</span>
+            <span class="case-stat-label">CPA Reduction vs. Account Best</span>
+          </div>
+          <div class="case-stat">
+            <span class="case-stat-value">6</span>
+            <span class="case-stat-label">ICPs Identified & Researched</span>
+          </div>
+          <div class="case-stat">
+            <span class="case-stat-value">30+</span>
+            <span class="case-stat-label">Full-Funnel Creatives Produced</span>
+          </div>
         </div>
       </div>
 
-      <div class="testimonial-card reveal-child">
-        <p class="testimonial-quote">"I was burned by two agencies before this. The difference is night and day — I finally talk to the person doing the actual work."</p>
-        <p class="testimonial-attribution"><strong>Brand Owner</strong> — Health & Wellness DTC</p>
+      <!-- Body: Before / After -->
+      <div class="case-study-body">
+        <div class="case-study-before">
+          <span class="case-col-label">Before We Came In</span>
+          <h4 class="case-col-title">No system. No pipeline. Just spend.</h4>
+          <ul class="case-study-list">
+            <li>Same stale creatives running for months with zero variation</li>
+            <li>No ICP research — ads targeting "everyone" with generic health copy</li>
+            <li>No creative testing framework — no angle tests, no desire tests, no iteration</li>
+            <li>No understanding of which audiences convert and why</li>
+            <li>Ad spend burning with no data feeding back into the next decision</li>
+            <li>Brand direction absent — no strategy, just hoping ads would work</li>
+          </ul>
+        </div>
+        <div class="case-study-after">
+          <span class="case-col-label">What We Built in 2 Weeks</span>
+          <h4 class="case-col-title">A full creative intelligence system.</h4>
+          <ul class="case-study-list">
+            <li>Deep audience research across 6 distinct ICPs with 400+ verbatim quotes each — mined from Reddit, forums, reviews, and communities</li>
+            <li>Mass desire mapping: 5 desires per ICP ranked by urgency, staying power, and market size</li>
+            <li>Unique mechanism architecture (UMP/UMS) for every ICP × desire combination</li>
+            <li>30+ full-funnel creative briefs — TOF, MOF, BOF — with structured angle testing across multiple concepts</li>
+            <li>8 replicable copy patterns extracted from performance data — a permanent creative checklist for this brand</li>
+            <li>New creative beat the account's all-time best CPA by 24% — from raw strategy, not guesswork</li>
+          </ul>
+        </div>
       </div>
-      <div class="testimonial-card reveal-child">
-        <p class="testimonial-quote">"They don't just run ads. They rebuilt our entire offer structure, fixed our unit economics, and then scaled. Revenue up 3x in 4 months."</p>
-        <p class="testimonial-attribution"><strong>Brand Founder</strong> — Supplements</p>
+
+      <!-- Footer: Deliverables -->
+      <div class="case-study-footer">
+        <span class="case-study-footer-label">Deliverables</span>
+        <div class="case-deliverables">
+          <span class="case-deliverable-tag">ICP Research</span>
+          <span class="case-deliverable-tag">Quote Banks</span>
+          <span class="case-deliverable-tag">Desire Mapping</span>
+          <span class="case-deliverable-tag">UMP/UMS</span>
+          <span class="case-deliverable-tag">Angle Tests</span>
+          <span class="case-deliverable-tag">Creative Briefs</span>
+          <span class="case-deliverable-tag">Full-Funnel Copy</span>
+          <span class="case-deliverable-tag">Performance Review</span>
+          <span class="case-deliverable-tag">Creative Playbook</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut Reverse -->
+  <div class="diagonal-cut-rev"></div>
+
+  <!-- Tailored Section -->
+  <section class="section" id="tailored">
+    <div class="reveal">
+      <span class="section-overline">Built Around You</span>
+      <h2 class="section-title">No Two Brands Get<br>the Same <span style="color:var(--cyan);">Playbook</span>.</h2>
+      <p class="section-desc">Every engagement starts with a deep audit of your brand's specific gaps. We don't sell packages — we build a strategy around what you actually need.</p>
+    </div>
+
+    <div class="tailored-grid">
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--cyan);">01</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">Your creative is dying every 2 weeks?</h4>
+          <p class="tailored-text">We build a creative testing engine with hook rotation, angle mapping, and format diversity so your pipeline never runs dry.</p>
+        </div>
+      </div>
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--magenta);">02</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">Meta keeps flagging your ads?</h4>
+          <p class="tailored-text">We layer in compliance scoring and proactive risk management so your account stays alive while your copy stays aggressive.</p>
+        </div>
+      </div>
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--violet);">03</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">Your unit economics don't add up?</h4>
+          <p class="tailored-text">We audit your COGS, NCAC, and contribution margin — and build the profitability levers into your growth strategy from day one.</p>
+        </div>
+      </div>
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--green);">04</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">Your offer converts but doesn't retain?</h4>
+          <p class="tailored-text">We restructure your offer architecture — bundles, subscriptions, upsells — to maximize LTV, not just front-end ROAS.</p>
+        </div>
+      </div>
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--cyan);">05</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">You don't know what's actually working?</h4>
+          <p class="tailored-text">We set up proper attribution and reporting so you see exactly which creatives, angles, and audiences drive real revenue — not vanity metrics.</p>
+        </div>
+      </div>
+      <div class="tailored-card reveal-child">
+        <div class="tailored-icon" style="color:var(--magenta);">06</div>
+        <div class="tailored-content">
+          <h4 class="tailored-title">You just need better creative strategy?</h4>
+          <p class="tailored-text">That's fine too. Not every brand needs the full engine. We scope to your gaps — if creative strategy alone is the unlock, that's where we focus.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1671,6 +1979,41 @@
 
   <!-- Diagonal Cut -->
   <div class="diagonal-cut"></div>
+
+  <!-- The System Section -->
+  <section class="section process-bg" id="system">
+    <div class="reveal">
+      <span class="section-overline">The System</span>
+      <h2 class="section-title">Creative Testing That<br><span style="color:var(--cyan);">Compounds</span>.</h2>
+      <p class="section-desc">Most brands guess. We run a system. Every creative we produce feeds data back into the next one — so your ads get sharper, faster, and more profitable over time.</p>
+    </div>
+
+    <div class="system-grid">
+      <div class="system-card reveal-child">
+        <div class="system-num">01</div>
+        <h4 class="system-name">Mine</h4>
+        <p class="system-desc">We mine your customers' real language — reviews, Reddit, forums, competitor ads — to find the exact words, emotions, and objections your audience uses. That's the raw material.</p>
+      </div>
+      <div class="system-card reveal-child">
+        <div class="system-num">02</div>
+        <h4 class="system-name">Map</h4>
+        <p class="system-desc">Every creative maps to a specific hook type, angle, and audience segment. A structured matrix of what we're testing, why, and what data we need for the next decision.</p>
+      </div>
+      <div class="system-card reveal-child">
+        <div class="system-num">03</div>
+        <h4 class="system-name">Test</h4>
+        <p class="system-desc">Winners get iterated. Losers get autopsied. Every test generates learnings that feed the next batch. We're compounding on what the data already told us works.</p>
+      </div>
+      <div class="system-card reveal-child">
+        <div class="system-num">04</div>
+        <h4 class="system-name">Scale</h4>
+        <p class="system-desc">We track every creative against hook rate, hold rate, CTR, and CPA — not just ROAS. Granular data tells us which levers to pull, so winners scale and the system gets smarter.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut Reverse -->
+  <div class="diagonal-cut-rev"></div>
 
   <!-- FAQ Section (NEW) -->
   <section class="section faq-bg" id="faq">
@@ -1726,9 +2069,9 @@
   <section class="cta-section" id="contact">
     <div class="reveal">
       <h2 class="cta-title">Ready to Build<br>Something <span style="color:var(--cyan);">Real</span>?</h2>
-      <p class="cta-desc">No pitch decks. No fluff. One call to see if your brand is the right fit. If it's not, you'll hear it straight — and get pointed to who is.</p>
+      <p class="cta-desc">We only work with 3 new brands every quarter. If there's an open spot and your brand is the right fit, we'll tell you exactly what we'd build — and you decide if it's worth it.</p>
       <div class="cta-btn-wrap">
-        <button class="btn-pulse">Book Your Strategy Call</button>
+        <button class="btn-pulse">Apply for a Spot</button>
       </div>
     </div>
   </section>
@@ -1746,7 +2089,7 @@
           <a href="#benefits">Why Us</a>
           <a href="#services">Services</a>
           <a href="#process">Process</a>
-          <a href="#results">Results</a>
+          <a href="#casestudy">Results</a>
           <a href="#faq">FAQ</a>
         </div>
       </div>
