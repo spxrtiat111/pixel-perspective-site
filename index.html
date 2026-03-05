@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Perspective — Your Revenue Engine, Engineered.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       CSS VARIABLES
+       ═══════════════════════════════════════════ */
+    :root {
+      --void: #0A0A0F;
+      --slate: #12121A;
+      --charcoal: #1E1E2A;
+      --cyan: #00F0FF;
+      --magenta: #FF0066;
+      --violet: #7B2FFF;
+      --green: #00FF88;
+      --ghost: #E8E8F0;
+      --steel: #8A8A9A;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.06);
+      --glow-cyan: rgba(0,240,255,0.12);
+      --glow-magenta: rgba(255,0,102,0.1);
+      --glow-violet: rgba(123,47,255,0.1);
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--charcoal) var(--void);
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background: var(--void);
+      color: var(--ghost);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a { color: var(--cyan); text-decoration: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    a:hover { text-shadow: 0 0 20px var(--glow-cyan); }
+
+    /* ═══════════════════════════════════════════
+       NOISE & SCANLINE OVERLAYS
+       ═══════════════════════════════════════════ */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.006) 2px,
+        rgba(255,255,255,0.006) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ═══════════════════════════════════════════
+       FLICKERING GRID BACKGROUND (MagicUI inspired)
+       ═══════════════════════════════════════════ */
+    #grid-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL PROGRESS BAR
+       ═══════════════════════════════════════════ */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta));
+      z-index: 10000;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ═══════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      z-index: 100;
+      background: rgba(10,10,15,0.6);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-border);
+      transition: all 0.4s ease;
+    }
+
+    nav.scrolled {
+      padding: 14px 60px;
+      background: rgba(10,10,15,0.85);
+    }
+
+    .nav-logo {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+      color: var(--ghost);
+    }
+
+    .nav-logo .pixel-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
+      margin: 0 1px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--steel);
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--cyan);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--cyan); text-shadow: 0 0 15px var(--glow-cyan); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border: 1px solid var(--cyan);
+      color: var(--cyan) !important;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.15), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .nav-cta:hover::before { left: 100%; }
+
+    .nav-cta:hover {
+      background: var(--cyan);
+      color: var(--void) !important;
+      box-shadow: 0 0 30px var(--glow-cyan), inset 0 0 30px rgba(0,240,255,0.1);
+    }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--ghost);
+      transition: all 0.3s ease;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO SECTION
+       ═══════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 160px 60px 100px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    #hero-particles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 15%;
+      right: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, var(--glow-cyan) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      animation: breathe 8s ease-in-out infinite;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 5%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--glow-magenta) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      animation: breathe 8s ease-in-out 4s infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .hero-overline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    }
+
+    .hero-overline::before {
+      content: '//';
+      margin-right: 8px;
+      opacity: 0.5;
+    }
+
+    .hero h1 {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: 1.02;
+      letter-spacing: -3px;
+      color: var(--ghost);
+      max-width: 900px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    }
+
+    .hero h1 .accent {
+      color: var(--cyan);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 .accent::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--cyan);
+      opacity: 0.3;
+      filter: blur(2px);
+    }
+
+    .hero h1 .accent-mag { color: var(--magenta); }
+
+    .hero-sub {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--steel);
+      max-width: 540px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+    }
+
+    /* Shimmer Button (MagicUI inspired) */
+    .btn-shimmer {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      padding: 18px 44px;
+      background: var(--cyan);
+      color: var(--void);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-shimmer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.3) 50%, transparent 75%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .btn-shimmer:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--glow-cyan), 0 0 60px rgba(0,240,255,0.15);
+    }
+
+    .btn-shimmer .cursor-blink {
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+    }
+
+    .btn-ghost {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      padding: 16px 32px;
+      background: transparent;
+      color: var(--steel);
+      border: 1px solid var(--charcoal);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--steel);
+      color: var(--ghost);
+    }
+
+    .hero-metric-bar {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-top: 1px solid var(--charcoal);
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+    }
+
+    .metric {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .metric-value {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--cyan);
+    }
+
+    .metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+
+    /* ═══════════════════════════════════════════
+       SOCIAL PROOF SECTION
+       ═══════════════════════════════════════════ */
+    .social-proof {
+      position: relative;
+      z-index: 1;
+      padding: 40px 0;
+      border-top: 1px solid var(--charcoal);
+      border-bottom: 1px solid var(--charcoal);
+      overflow: hidden;
+      background: var(--slate);
+    }
+
+    .social-proof-label {
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 24px;
+      opacity: 0.5;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 80px;
+      animation: scroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .ticker-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--steel);
+      white-space: nowrap;
+      opacity: 0.5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ticker-item .dot {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+
+    /* ═══════════════════════════════════════════
+       SECTION HEADERS (shared)
+       ═══════════════════════════════════════════ */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 60px;
+    }
+
+    .section-overline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+
+    .section-overline::before { content: '[ '; opacity: 0.4; }
+    .section-overline::after { content: ' ]'; opacity: 0.4; }
+
+    .section-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 4vw, 56px);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      color: var(--ghost);
+      margin-bottom: 20px;
+    }
+
+    .section-desc {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 17px;
+      color: var(--steel);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* Reveal animation for sections */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered children */
+    .reveal-child {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-child.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════
+       BENEFITS SECTION (NEW)
+       ═══════════════════════════════════════════ */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .benefit-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Border beam effect (MagicUI inspired) */
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 340deg, var(--cyan) 360deg);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      padding: 1px;
+      animation: borderSpin 4s linear infinite;
+    }
+
+    .benefit-card:hover::before { opacity: 1; }
+
+    @keyframes borderSpin {
+      0% { background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 300deg, var(--cyan) 360deg); }
+      25% { background: conic-gradient(from 90deg at 50% 50%, transparent 0deg, transparent 300deg, var(--cyan) 360deg); }
+      50% { background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, transparent 300deg, var(--cyan) 360deg); }
+      75% { background: conic-gradient(from 270deg at 50% 50%, transparent 0deg, transparent 300deg, var(--cyan) 360deg); }
+      100% { background: conic-gradient(from 360deg at 50% 50%, transparent 0deg, transparent 300deg, var(--cyan) 360deg); }
+    }
+
+    .benefit-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-4px);
+    }
+
+    .benefit-icon {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      margin-bottom: 20px;
+      line-height: 1;
+    }
+
+    .benefit-card:nth-child(1) .benefit-icon { color: var(--cyan); }
+    .benefit-card:nth-child(2) .benefit-icon { color: var(--magenta); }
+    .benefit-card:nth-child(3) .benefit-icon { color: var(--violet); }
+    .benefit-card:nth-child(4) .benefit-icon { color: var(--green); }
+    .benefit-card:nth-child(5) .benefit-icon { color: var(--cyan); }
+    .benefit-card:nth-child(6) .benefit-icon { color: var(--magenta); }
+
+    .benefit-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--ghost);
+      margin-bottom: 12px;
+    }
+
+    .benefit-text {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 15px;
+      color: var(--steel);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════
+       SERVICES — MAGIC CARDS (MagicUI spotlight)
+       ═══════════════════════════════════════════ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 64px;
+    }
+
+    .service-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 48px 36px;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Mouse-follow spotlight (MagicUI MagicCard inspired) */
+    .service-card .spotlight {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,240,255,0.08), transparent 60%);
+    }
+
+    .service-card:hover .spotlight { opacity: 1; }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .service-card:hover::after { opacity: 1; }
+
+    .service-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(0,240,255,0.15);
+      transform: translateY(-4px);
+    }
+
+    .service-card:nth-child(2):hover { border-color: rgba(123,47,255,0.2); }
+    .service-card:nth-child(2)::after { background: linear-gradient(90deg, transparent, var(--violet), transparent); }
+    .service-card:nth-child(2) .spotlight { background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(123,47,255,0.08), transparent 60%); }
+
+    .service-card:nth-child(3):hover { border-color: rgba(255,0,102,0.2); }
+    .service-card:nth-child(3)::after { background: linear-gradient(90deg, transparent, var(--magenta), transparent); }
+    .service-card:nth-child(3) .spotlight { background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,0,102,0.08), transparent 60%); }
+
+    .service-num {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 64px;
+      color: var(--charcoal);
+      line-height: 1;
+      margin-bottom: 24px;
+      transition: color 0.4s ease;
+    }
+
+    .service-card:hover .service-num { color: rgba(0,240,255,0.15); }
+
+    .service-name {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      color: var(--ghost);
+      margin-bottom: 16px;
+    }
+
+    .service-detail {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 15px;
+      color: var(--steel);
+      line-height: 1.7;
+    }
+
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .service-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--glass-border);
+      color: var(--steel);
+    }
+
+    /* ═══════════════════════════════════════════
+       PROCESS — REVENUE ENGINE
+       ═══════════════════════════════════════════ */
+    .process-bg {
+      background: var(--slate);
+      border-top: 1px solid var(--charcoal);
+      border-bottom: 1px solid var(--charcoal);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      position: relative;
+    }
+
+    .process-grid::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--magenta), var(--green), var(--cyan), var(--magenta));
+      z-index: 0;
+    }
+
+    .process-step {
+      text-align: center;
+      padding: 0 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-marker {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 16px;
+      border: 2px solid var(--cyan);
+      background: var(--void);
+      color: var(--cyan);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      transition: all 0.4s ease;
+    }
+
+    .process-step:hover .step-marker {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px var(--glow-cyan);
+    }
+
+    .process-step:nth-child(2) .step-marker { border-color: var(--magenta); color: var(--magenta); }
+    .process-step:nth-child(3) .step-marker { border-color: var(--violet); color: var(--violet); }
+    .process-step:nth-child(4) .step-marker { border-color: var(--green); color: var(--green); }
+    .process-step:nth-child(5) .step-marker { border-color: var(--cyan); color: var(--cyan); }
+    .process-step:nth-child(6) .step-marker { border-color: var(--magenta); color: var(--magenta); }
+
+    .step-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--ghost);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 12px;
+      color: var(--steel);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════
+       TESTIMONIALS (EXPANDED)
+       ═══════════════════════════════════════════ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .testimonial-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .testimonial-card:hover {
+      border-color: rgba(0,240,255,0.1);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .testimonial-card.featured {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .featured-visual {
+      background: linear-gradient(135deg, var(--slate), var(--void));
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-visual::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 200px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.04));
+      pointer-events: none;
+    }
+
+    .case-brand {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      letter-spacing: -1px;
+      color: var(--ghost);
+      margin-bottom: 6px;
+    }
+
+    .case-category {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 32px;
+    }
+
+    .case-stat-row {
+      display: flex;
+      gap: 40px;
+    }
+
+    .case-stat-value {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--green);
+    }
+
+    .case-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-top: 4px;
+    }
+
+    .featured-content {
+      padding: 60px 48px;
+      border-left: 1px solid var(--charcoal);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .testimonial-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--ghost);
+      margin-bottom: 24px;
+      position: relative;
+      padding-left: 24px;
+      border-left: 2px solid var(--cyan);
+    }
+
+    .testimonial-card:nth-child(2) .testimonial-quote { border-left-color: var(--violet); }
+    .testimonial-card:nth-child(3) .testimonial-quote { border-left-color: var(--magenta); }
+
+    .testimonial-attribution {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 14px;
+      color: var(--steel);
+    }
+
+    .testimonial-attribution strong {
+      color: var(--ghost);
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════
+       ABOUT / OPERATOR MODEL
+       ═══════════════════════════════════════════ */
+    .about-bg { background: var(--slate); border-top: 1px solid var(--charcoal); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      margin-top: 64px;
+      align-items: start;
+    }
+
+    .about-text {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--steel);
+    }
+
+    .about-text strong { color: var(--ghost); }
+
+    .about-text p + p { margin-top: 20px; }
+
+    .tool-stack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .tool-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--steel);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .tool-chip:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,240,255,0.04);
+    }
+
+    /* ═══════════════════════════════════════════
+       CTA SECTION
+       ═══════════════════════════════════════════ */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      padding: 160px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, var(--glow-cyan) 0%, transparent 60%);
+      filter: blur(100px);
+      pointer-events: none;
+      animation: breathe 6s ease-in-out infinite;
+    }
+
+    .cta-title {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: clamp(42px, 5vw, 72px);
+      letter-spacing: -2px;
+      line-height: 1.05;
+      color: var(--ghost);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .cta-desc {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 18px;
+      color: var(--steel);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    .cta-btn-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Pulsating CTA (MagicUI inspired) */
+    .btn-pulse {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      padding: 20px 52px;
+      background: var(--cyan);
+      color: var(--void);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-pulse::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 100%; height: 100%;
+      transform: translate(-50%, -50%);
+      background: var(--cyan);
+      opacity: 0;
+      z-index: -1;
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { opacity: 0.4; width: 100%; height: 100%; }
+      100% { opacity: 0; width: 140%; height: 180%; }
+    }
+
+    .btn-pulse:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 50px var(--glow-cyan);
+    }
+
+    /* ═══════════════════════════════════════════
+       FAQS (NEW)
+       ═══════════════════════════════════════════ */
+    .faq-bg { background: var(--slate); border-top: 1px solid var(--charcoal); }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 64px;
+      align-items: start;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--charcoal);
+    }
+
+    .faq-question {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--ghost);
+      padding: 24px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.3s ease;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .faq-question:hover { color: var(--cyan); }
+
+    .faq-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      color: var(--cyan);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 15px;
+      color: var(--steel);
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      padding: 0 0;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding: 0 0 24px 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 60px 60px 40px;
+      border-top: 1px solid var(--charcoal);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--ghost);
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 14px;
+      color: var(--steel);
+      line-height: 1.6;
+      max-width: 300px;
+    }
+
+    .footer-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ghost);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 14px;
+      color: var(--steel);
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--charcoal);
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--steel);
+      opacity: 0.5;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-socials a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--steel);
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .footer-socials a:hover { opacity: 1; color: var(--cyan); }
+
+    /* ═══════════════════════════════════════════
+       DIAGONAL SECTION DIVIDERS
+       ═══════════════════════════════════════════ */
+    .diagonal-cut {
+      height: 60px;
+      position: relative;
+      z-index: 1;
+      background: var(--void);
+    }
+
+    .diagonal-cut::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--slate);
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    }
+
+    .diagonal-cut-rev {
+      height: 60px;
+      position: relative;
+      z-index: 1;
+      background: var(--slate);
+    }
+
+    .diagonal-cut-rev::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--void);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    /* ═══════════════════════════════════════════
+       CROSSHAIR DECORATIONS
+       ═══════════════════════════════════════════ */
+    .crosshair {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+    }
+
+    .crosshair::before, .crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--cyan);
+      opacity: 0.2;
+    }
+
+    .crosshair::before {
+      top: 50%; left: 0;
+      width: 100%; height: 1px;
+      transform: translateY(-50%);
+    }
+
+    .crosshair::after {
+      left: 50%; top: 0;
+      width: 1px; height: 100%;
+      transform: translateX(-50%);
+    }
+
+    /* ═══════════════════════════════════════════
+       ANIMATIONS
+       ═══════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Number counter animation */
+    .counter { display: inline-block; }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .services-grid,
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+      .process-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+      .process-grid::before { display: none; }
+      .about-grid, .faq-grid { grid-template-columns: 1fr; }
+      .testimonial-card.featured { grid-template-columns: 1fr; }
+      .featured-content { border-left: none; border-top: 1px solid var(--charcoal); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      nav.scrolled { padding: 12px 24px; }
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(10,10,15,0.95);
+        backdrop-filter: blur(24px);
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--charcoal);
+      }
+      .section { padding: 80px 24px; }
+      .hero { padding: 120px 24px 80px; }
+      .hero-metric-bar {
+        position: relative;
+        left: 0; right: 0; bottom: 0;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 48px;
+      }
+      .services-grid,
+      .benefits-grid { grid-template-columns: 1fr; }
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .testimonial-card.featured { grid-column: span 1; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+      .cta-section { padding: 100px 24px; }
+      footer { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Flickering Grid Background -->
+  <canvas id="grid-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav id="mainNav">
+    <div class="nav-logo">
+      P<span class="pixel-dot"></span>XEL PERSPECTIVE
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#benefits">Why Us</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact" class="nav-cta">Let's Build</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <canvas id="hero-particles"></canvas>
+    <div class="crosshair" style="top:140px;left:60px;"></div>
+    <div class="crosshair" style="bottom:140px;right:80px;"></div>
+    <p class="hero-overline">Growth Marketing for Health & Wellness Brands</p>
+    <h1>Your Revenue<br>Engine, <span class="accent">Engineered</span><span class="accent-mag">.</span></h1>
+    <p class="hero-sub">One senior operator. AI-augmented systems. 25+ creatives per day. We operate across your entire revenue engine so you can scale without the chaos.</p>
+    <div class="hero-actions">
+      <button class="btn-shimmer">Book a Strategy Call<span class="cursor-blink">_</span></button>
+      <button class="btn-ghost">See How It Works</button>
+    </div>
+    <div class="hero-metric-bar">
+      <div class="metric">
+        <span class="metric-value"><span class="counter" data-target="25">0</span>+</span>
+        <span class="metric-label">Creatives / Day</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value"><span class="counter" data-target="6">0</span></span>
+        <span class="metric-label">Revenue Levers</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value"><span class="counter" data-target="10">0</span>x</span>
+        <span class="metric-label">Month 6 vs Month 1</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">&lt;24h</span>
+        <span class="metric-label">Ban Recovery</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Ticker -->
+  <div class="social-proof">
+    <p class="social-proof-label">Specialized In</p>
+    <div class="ticker">
+      <span class="ticker-item"><span class="dot"></span>Meta Ads</span>
+      <span class="ticker-item"><span class="dot"></span>Creative Strategy</span>
+      <span class="ticker-item"><span class="dot"></span>Unit Economics</span>
+      <span class="ticker-item"><span class="dot"></span>Offer Architecture</span>
+      <span class="ticker-item"><span class="dot"></span>Supplements</span>
+      <span class="ticker-item"><span class="dot"></span>Health & Wellness</span>
+      <span class="ticker-item"><span class="dot"></span>DTC E-Commerce</span>
+      <span class="ticker-item"><span class="dot"></span>AI-Augmented Ops</span>
+      <span class="ticker-item"><span class="dot"></span>Meta Ads</span>
+      <span class="ticker-item"><span class="dot"></span>Creative Strategy</span>
+      <span class="ticker-item"><span class="dot"></span>Unit Economics</span>
+      <span class="ticker-item"><span class="dot"></span>Offer Architecture</span>
+      <span class="ticker-item"><span class="dot"></span>Supplements</span>
+      <span class="ticker-item"><span class="dot"></span>Health & Wellness</span>
+      <span class="ticker-item"><span class="dot"></span>DTC E-Commerce</span>
+      <span class="ticker-item"><span class="dot"></span>AI-Augmented Ops</span>
+    </div>
+  </div>
+
+  <!-- Benefits Section (NEW) -->
+  <section class="section" id="benefits">
+    <div class="reveal">
+      <span class="section-overline">Why Pixel Perspective</span>
+      <h2 class="section-title">Stop Paying for Overhead.<br>Start Paying for <span style="color:var(--cyan);">Output</span>.</h2>
+      <p class="section-desc">Traditional agencies bury you in layers. We strip it down to what actually moves your revenue needle.</p>
+    </div>
+
+    <div class="benefits-grid">
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">&rsaquo;_</div>
+        <h3 class="benefit-title">One Senior Operator, Not a Team of Juniors</h3>
+        <p class="benefit-text">You talk to the person doing the work. No account managers, no game of telephone. Strategy and execution from the same brain.</p>
+      </div>
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">125+</div>
+        <h3 class="benefit-title">Creatives Per Week, Per Strategist</h3>
+        <p class="benefit-text">25+ net-new creatives per day. AI-augmented production means we test more angles in a week than most agencies test in a quarter.</p>
+      </div>
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">[&thinsp;]</div>
+        <h3 class="benefit-title">Intelligence That Compounds</h3>
+        <p class="benefit-text">Every test, every data point, every insight feeds back into the system. Month 6 output is 10x Month 1. The system never forgets.</p>
+      </div>
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">$&rarr;</div>
+        <h3 class="benefit-title">Revenue Operations, Not Just Ads</h3>
+        <p class="benefit-text">We pull profitability levers most agencies don't even know exist. Unit economics, offer strategy, COGS, contribution margin.</p>
+      </div>
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">&lt;24h</div>
+        <h3 class="benefit-title">Ultra-Fast Compliance Recovery</h3>
+        <p class="benefit-text">Health & wellness ads get flagged. We know the game. HIVA ratings, risk management, and sub-24-hour ban recovery.</p>
+      </div>
+      <div class="benefit-card reveal-child">
+        <div class="benefit-icon">0%</div>
+        <h3 class="benefit-title">Zero Knowledge Loss</h3>
+        <p class="benefit-text">When agency team members leave, the learning dies. Our system is documented, systematic, and doesn't walk out the door.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut -->
+  <div class="diagonal-cut"></div>
+
+  <!-- Services Section -->
+  <section class="section process-bg" id="services">
+    <div class="reveal">
+      <span class="section-overline">What We Operate</span>
+      <h2 class="section-title">Not Just Ads.<br>The Whole Engine.</h2>
+      <p class="section-desc">Most agencies run your ads. We operate your entire revenue system — creative, media, economics, offer, and positioning — as one unified machine.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal-child">
+        <div class="spotlight"></div>
+        <div class="service-num">01</div>
+        <h3 class="service-name">Creative Engine</h3>
+        <p class="service-detail">Mass desire testing, angle testing, competitor recreations — running simultaneously, feeding the pipeline forever. 25+ net-new creatives per day.</p>
+        <div class="service-tags">
+          <span class="service-tag">UGC</span>
+          <span class="service-tag">Static</span>
+          <span class="service-tag">Video</span>
+          <span class="service-tag">AI-Gen</span>
+        </div>
+      </div>
+      <div class="service-card reveal-child">
+        <div class="spotlight"></div>
+        <div class="service-num">02</div>
+        <h3 class="service-name">Media Buying</h3>
+        <p class="service-detail">Meta Ads operated by a senior strategist, not a junior account manager. Every dollar tracked against NCAC targets with real-time optimization.</p>
+        <div class="service-tags">
+          <span class="service-tag">Meta</span>
+          <span class="service-tag">NCAC</span>
+          <span class="service-tag">Scaling</span>
+          <span class="service-tag">CBO</span>
+        </div>
+      </div>
+      <div class="service-card reveal-child">
+        <div class="spotlight"></div>
+        <div class="service-num">03</div>
+        <h3 class="service-name">Revenue Operations</h3>
+        <p class="service-detail">Unit economics, offer strategy, COGS awareness, contribution margin — we pull the profitability levers that agencies ignore.</p>
+        <div class="service-tags">
+          <span class="service-tag">COGS</span>
+          <span class="service-tag">LTV</span>
+          <span class="service-tag">AOV</span>
+          <span class="service-tag">Margin</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut Reverse -->
+  <div class="diagonal-cut-rev"></div>
+
+  <!-- Process Section -->
+  <section class="section" id="process">
+    <div class="reveal">
+      <span class="section-overline">The Revenue Engine Method</span>
+      <h2 class="section-title">Six Phases. One Operator.<br>Zero Handoffs.</h2>
+      <p class="section-desc">A compounding system where every test feeds the next. Month 6 output is 10x Month 1. Agencies reset when team members leave — we don't.</p>
+    </div>
+
+    <div class="process-grid reveal">
+      <div class="process-step">
+        <div class="step-marker">01</div>
+        <h4 class="step-title">Audience Intel</h4>
+        <p class="step-desc">Quote mining, ICP validation, NotebookLM intelligence layer</p>
+      </div>
+      <div class="process-step">
+        <div class="step-marker">02</div>
+        <h4 class="step-title">Compliance</h4>
+        <p class="step-desc">HIVA rating, risk management, ultra-fast ban recovery</p>
+      </div>
+      <div class="process-step">
+        <div class="step-marker">03</div>
+        <h4 class="step-title">Creative Testing</h4>
+        <p class="step-desc">Desire + angle testing that never stops, feeding variety forever</p>
+      </div>
+      <div class="process-step">
+        <div class="step-marker">04</div>
+        <h4 class="step-title">Unit Economics</h4>
+        <p class="step-desc">Offer, COGS, NCAC, and CM — pulling profitability levers</p>
+      </div>
+      <div class="process-step">
+        <div class="step-marker">05</div>
+        <h4 class="step-title">Offer Strategy</h4>
+        <p class="step-desc">Proactive fixes — pricing, bundles, subscriptions, landing pages</p>
+      </div>
+      <div class="process-step">
+        <div class="step-marker">06</div>
+        <h4 class="step-title">Retention & LTV</h4>
+        <p class="step-desc">Post-purchase flows, winback, subscription retention</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut -->
+  <div class="diagonal-cut"></div>
+
+  <!-- Testimonials Section (EXPANDED) -->
+  <section class="section process-bg" id="results">
+    <div class="reveal">
+      <span class="section-overline">Proof of Concept</span>
+      <h2 class="section-title">Results That Speak.</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card featured reveal-child">
+        <div class="featured-visual">
+          <span class="case-category">Supplements &middot; DTC</span>
+          <h3 class="case-brand">[Client Name]</h3>
+          <div class="case-stat-row">
+            <div>
+              <div class="case-stat-value">+340%</div>
+              <div class="case-stat-label">ROAS Improvement</div>
+            </div>
+            <div>
+              <div class="case-stat-value">-52%</div>
+              <div class="case-stat-label">NCAC Reduction</div>
+            </div>
+            <div>
+              <div class="case-stat-value">500+</div>
+              <div class="case-stat-label">Creatives / Month</div>
+            </div>
+          </div>
+        </div>
+        <div class="featured-content">
+          <p class="testimonial-quote">"They produced more creative in one week than our last agency did in a month. And they actually know why things work — not just that they work."</p>
+          <p class="testimonial-attribution"><strong>Founder Name</strong> — Brand, Category</p>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal-child">
+        <p class="testimonial-quote">"I was burned by two agencies before this. The difference is night and day — I finally talk to the person doing the actual work."</p>
+        <p class="testimonial-attribution"><strong>Brand Owner</strong> — Health & Wellness DTC</p>
+      </div>
+      <div class="testimonial-card reveal-child">
+        <p class="testimonial-quote">"They don't just run ads. They rebuilt our entire offer structure, fixed our unit economics, and then scaled. Revenue up 3x in 4 months."</p>
+        <p class="testimonial-attribution"><strong>Brand Founder</strong> — Supplements</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut Reverse -->
+  <div class="diagonal-cut-rev"></div>
+
+  <!-- About Section -->
+  <section class="section" id="about">
+    <div class="reveal">
+      <span class="section-overline">The Operator Model</span>
+      <h2 class="section-title">One Brain. Infinite Leverage.</h2>
+    </div>
+
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p><strong>Traditional agencies give you a team of juniors managed by a senior you'll never talk to.</strong> We give you the senior — augmented with an AI stack that multiplies output by 10x.</p>
+        <p>Every piece of brand intelligence lives in NotebookLM. Every creative test feeds the next. Every decision is informed by data, not gut feel. The system compounds — and it never forgets.</p>
+        <p>This isn't about doing more. It's about doing <strong>smarter</strong>, with a system that gets better every single day.</p>
+      </div>
+      <div>
+        <p class="section-overline" style="margin-bottom:20px;">Tech Stack</p>
+        <div class="tool-stack">
+          <div class="tool-chip">Claude AI</div>
+          <div class="tool-chip">Gemini</div>
+          <div class="tool-chip">NotebookLM</div>
+          <div class="tool-chip">Meta Ads</div>
+          <div class="tool-chip">Apify</div>
+          <div class="tool-chip">ClickUp</div>
+          <div class="tool-chip">Atria</div>
+          <div class="tool-chip">Higgsfield</div>
+          <div class="tool-chip">Ad Library</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut -->
+  <div class="diagonal-cut"></div>
+
+  <!-- FAQ Section (NEW) -->
+  <section class="section faq-bg" id="faq">
+    <div class="reveal">
+      <span class="section-overline">Frequently Asked</span>
+      <h2 class="section-title">Questions We Get.</h2>
+    </div>
+
+    <div class="faq-grid reveal">
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">How is this different from a regular agency? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">You work directly with a senior operator — no juniors, no account managers, no game of telephone. We're augmented by AI to produce 125+ creatives per week per strategist. The system compounds over time instead of resetting when people leave.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What industries do you specialize in? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">Health and wellness e-commerce brands — supplements, functional foods, skincare, fitness, and wellness products sold DTC. We know the compliance landscape, the audience psychology, and the creative angles that convert in this space.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What size brands do you work with? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">Brands doing $250K to $5M per year. Whether you've plateaued at $500K, you're unhappy with your current agency, or you're trapped as the bottleneck in your own business — we've built the system to solve those exact problems.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How do you actually produce 25+ creatives per day? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">AI-augmented production workflows. We use Claude, Gemini, Higgsfield, and custom automation to handle the volume work, while senior strategy drives the angles, hooks, and creative direction. It's not about speed — it's about testing more hypotheses faster.</div>
+        </div>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">What platforms do you run ads on? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">Primarily Meta (Facebook & Instagram). That's where the majority of health & wellness DTC revenue is generated. We go deep on one platform rather than spreading thin across many.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What does the onboarding process look like? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">We start with a strategy call to see if there's a fit. If there is, we run a deep audience intelligence phase — quote mining your customers, validating ICPs, and building the knowledge base. Then we launch into creative testing and media buying within 2 weeks.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What if my ad account gets banned? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">We've built compliance recovery into our process. HIVA risk ratings, proactive flagging, and sub-24-hour ban recovery. Health & wellness ads get flagged — we know the game and we play it better than anyone.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What are your pricing and contract terms? <span class="faq-icon">+</span></button>
+          <div class="faq-answer">We'll discuss pricing on the strategy call based on your brand's specific needs and scale. No long-term contracts — we earn your business every month. If we're not delivering, you're free to leave.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Cut Reverse -->
+  <div class="diagonal-cut-rev"></div>
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="contact">
+    <div class="reveal">
+      <h2 class="cta-title">Ready to Build<br>Something <span style="color:var(--cyan);">Real</span>?</h2>
+      <p class="cta-desc">No pitch decks. No fluff. One call to see if we're the right fit. If we're not, we'll tell you — and point you to who is.</p>
+      <div class="cta-btn-wrap">
+        <button class="btn-pulse">Book Your Strategy Call</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">P<span class="pixel-dot"></span>XEL PERSPECTIVE</div>
+        <p class="footer-tagline">Growth marketing for health & wellness brands that want revenue systems, not just ad campaigns.</p>
+      </div>
+      <div>
+        <h4 class="footer-heading">Navigate</h4>
+        <div class="footer-links">
+          <a href="#benefits">Why Us</a>
+          <a href="#services">Services</a>
+          <a href="#process">Process</a>
+          <a href="#results">Results</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Services</h4>
+        <div class="footer-links">
+          <a href="#services">Creative Engine</a>
+          <a href="#services">Media Buying</a>
+          <a href="#services">Revenue Ops</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Connect</h4>
+        <div class="footer-links">
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">YouTube</a>
+          <a href="mailto:hello@pixelperspective.co">Email</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 Pixel Perspective. Built different.</span>
+      <div class="footer-socials">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+       ═══════════════════════════════════════════ -->
+  <script>
+    // ─── Flickering Grid Background (MagicUI inspired) ───
+    (function() {
+      const canvas = document.getElementById('grid-canvas');
+      const ctx = canvas.getContext('2d');
+      let cols, rows, squares;
+      const size = 4, gap = 8, maxOpacity = 0.4, flickerChance = 0.03;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.scale(dpr, dpr);
+        cols = Math.ceil(window.innerWidth / (size + gap));
+        rows = Math.ceil(window.innerHeight / (size + gap));
+        squares = new Float32Array(cols * rows);
+        for (let i = 0; i < squares.length; i++) squares[i] = Math.random() * maxOpacity;
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < cols; i++) {
+          for (let j = 0; j < rows; j++) {
+            if (Math.random() < flickerChance) squares[i * rows + j] = Math.random() * maxOpacity;
+            const a = squares[i * rows + j];
+            ctx.fillStyle = `rgba(0, 240, 255, ${a})`;
+            ctx.fillRect(i * (size + gap), j * (size + gap), size, size);
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+      window.addEventListener('resize', resize);
+    })();
+
+    // ─── Hero Particles ───
+    (function() {
+      const canvas = document.getElementById('hero-particles');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      const count = 60;
+
+      function resize() {
+        const hero = canvas.parentElement;
+        canvas.width = hero.offsetWidth;
+        canvas.height = hero.offsetHeight;
+      }
+
+      function createParticle() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 2 + 0.5,
+          alpha: Math.random() * 0.5 + 0.1,
+          color: ['0,240,255', '123,47,255', '255,0,102'][Math.floor(Math.random() * 3)]
+        };
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < count; i++) particles.push(createParticle());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+          ctx.fill();
+        });
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(0, 240, 255, ${0.06 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      init();
+      draw();
+      window.addEventListener('resize', () => { resize(); });
+    })();
+
+    // ─── Scroll Progress Bar ───
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    });
+
+    // ─── Nav scroll effect ───
+    window.addEventListener('scroll', () => {
+      document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ─── Mobile nav toggle ───
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // ─── Scroll Reveal (IntersectionObserver) ───
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          // Stagger children
+          const children = entry.target.parentElement.querySelectorAll('.reveal-child');
+          children.forEach((child, i) => {
+            setTimeout(() => child.classList.add('visible'), i * 120);
+          });
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Also observe reveal-children that are direct section children (not inside .reveal)
+    const childObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-child').forEach(el => {
+      if (!el.closest('.reveal')) childObserver.observe(el);
+    });
+
+    // ─── Number Counter Animation ───
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          let current = 0;
+          const duration = 1500;
+          const step = target / (duration / 16);
+
+          function update() {
+            current += step;
+            if (current >= target) {
+              el.textContent = target;
+              return;
+            }
+            el.textContent = Math.floor(current);
+            requestAnimationFrame(update);
+          }
+          update();
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+    // ─── Magic Card Spotlight Effect ───
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
+      });
+    });
+
+    // ─── FAQ Accordion ───
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+
+        // Toggle clicked
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // ─── Smooth scroll for anchor links ───
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
