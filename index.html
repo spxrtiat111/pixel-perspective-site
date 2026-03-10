@@ -1442,6 +1442,85 @@
     .footer-socials a:hover { opacity: 1; color: var(--cyan); }
 
     /* ═══════════════════════════════════════════
+       ANTI-PITCH — INTEGRATED INTO PROCESS SECTION
+       ═══════════════════════════════════════════ */
+    .anti-pitch-block {
+      max-width: 680px;
+      margin: 80px auto 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .anti-pitch-block::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 1px;
+      background: var(--cyan);
+      opacity: 0.4;
+    }
+
+    .anti-pitch-headline {
+      font-family: 'Clash Display', sans-serif;
+      font-weight: 700;
+      font-size: clamp(26px, 3vw, 38px);
+      letter-spacing: -1px;
+      line-height: 1.15;
+      color: var(--ghost);
+      margin-bottom: 24px;
+    }
+
+    .anti-pitch-body {
+      font-family: 'Satoshi', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--steel);
+      margin-bottom: 12px;
+    }
+
+    .anti-pitch-body strong {
+      color: var(--ghost);
+      font-weight: 600;
+    }
+
+    .anti-pitch-body .acc {
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    .anti-pitch-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cyan) !important;
+      text-decoration: none !important;
+      margin-top: 24px;
+      transition: gap 0.3s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.3s ease;
+    }
+
+    .anti-pitch-cta:hover {
+      gap: 18px;
+      text-shadow: 0 0 24px rgba(0,240,255,0.3);
+    }
+
+    .anti-pitch-arrow {
+      font-size: 16px;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .anti-pitch-cta:hover .anti-pitch-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ═══════════════════════════════════════════
        DIAGONAL SECTION DIVIDERS
        ═══════════════════════════════════════════ */
     .diagonal-cut {
@@ -1608,7 +1687,7 @@
       <li><a href="#process">Process</a></li>
       <li><a href="#casestudy">Results</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="https://form.jotform.com/260644650440048" target="_blank" class="nav-cta">Apply for a Spot</a></li>
+      <li><a href="https://form.jotform.com/260644650440048" target="_blank" class="nav-cta">Get Perspective</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -1624,25 +1703,25 @@
     <h1>Your Revenue<br>Engine, <span class="accent">Engineered</span><span class="accent-mag">.</span></h1>
     <p class="hero-sub">You get one senior operator — not a team of juniors. An AI-augmented system that produces 25+ creatives per day. Your entire revenue engine, managed as one machine, so you can scale without the chaos.</p>
     <div class="hero-actions">
-      <a href="https://form.jotform.com/260644650440048" target="_blank" style="text-decoration:none;"><button class="btn-shimmer">Apply for a Spot<span class="cursor-blink">_</span></button></a>
+      <a href="https://form.jotform.com/260644650440048" target="_blank" style="text-decoration:none;"><button class="btn-shimmer">Get Perspective<span class="cursor-blink">_</span></button></a>
       <a href="#process" style="text-decoration:none;"><button class="btn-ghost">See How It Works</button></a>
     </div>
     <div class="hero-metric-bar">
       <div class="metric">
-        <span class="metric-value"><span class="counter" data-target="25">0</span>+</span>
-        <span class="metric-label">Creatives / Day</span>
+        <span class="metric-value">AI+1</span>
+        <span class="metric-label">Operator</span>
       </div>
       <div class="metric">
         <span class="metric-value"><span class="counter" data-target="6">0</span></span>
         <span class="metric-label">Revenue Levers</span>
       </div>
       <div class="metric">
-        <span class="metric-value"><span class="counter" data-target="10">0</span>x</span>
-        <span class="metric-label">Month 6 vs Month 1</span>
-      </div>
-      <div class="metric">
         <span class="metric-value">&lt;24h</span>
         <span class="metric-label">Ban Recovery</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value">Live</span>
+        <span class="metric-label">Dashboard</span>
       </div>
     </div>
   </section>
@@ -1692,7 +1771,7 @@
       <div class="benefit-card reveal-child">
         <div class="benefit-icon">[&thinsp;]</div>
         <h3 class="benefit-title">Your Results Get Better Every Month</h3>
-        <p class="benefit-text">Every test, every data point, every insight about your brand feeds back into a proprietary intelligence system. By month 6, your output is 10x month 1.</p>
+        <p class="benefit-text">Every test, every data point, every insight about your brand feeds back into a proprietary intelligence system. Your creative output compounds — and your system never resets.</p>
       </div>
       <div class="benefit-card reveal-child">
         <div class="benefit-icon">$&rarr;</div>
@@ -1771,7 +1850,7 @@
     <div class="reveal">
       <span class="section-overline">The Revenue Engine Method</span>
       <h2 class="section-title">Six Phases. One Operator.<br>Zero Handoffs.</h2>
-      <p class="section-desc">Every test on your account feeds the next one. Your month 6 output is 10x month 1. When agencies lose team members, they reset. Your system doesn't.</p>
+      <p class="section-desc">Every test on your account feeds the next one. Your creative intelligence compounds over time. When agencies lose team members, they reset. Your system doesn't.</p>
     </div>
 
     <div class="process-grid reveal">
@@ -1805,6 +1884,14 @@
         <h4 class="step-title">Retention & LTV</h4>
         <p class="step-desc">Your post-purchase flows, winback sequences, and subscription retention get optimized</p>
       </div>
+    </div>
+
+    <!-- Anti-Pitch — integrated into process section -->
+    <div class="anti-pitch-block reveal" id="anti-pitch">
+      <h2 class="anti-pitch-headline">We're Not For Everyone.</h2>
+      <p class="anti-pitch-body">If you want weekly calls where someone reads your dashboard back to you — <strong>hire a traditional agency.</strong></p>
+      <p class="anti-pitch-body">If you want an operator who will tell you what's broken, fix it, and <span class="acc">produce more creative volume in a day than most agencies do in a month</span> — that's us.</p>
+      <a href="https://form.jotform.com/260644650440048" target="_blank" class="anti-pitch-cta">Get Perspective<span class="anti-pitch-arrow">&rarr;</span></a>
     </div>
   </section>
 
@@ -1958,7 +2045,7 @@
 
     <div class="about-grid reveal">
       <div class="about-text">
-        <p><strong>You've been paying for a team of juniors managed by a senior you'll never talk to.</strong> Here, you get the senior — augmented with a proprietary AI stack that multiplies your output by 10x.</p>
+        <p><strong>You've been paying for a team of juniors managed by a senior you'll never talk to.</strong> Here, you get the senior — augmented with a proprietary AI stack that compounds your brand intelligence every single day.</p>
         <p>Every piece of your brand intelligence lives in a centralized knowledge system. Every creative test feeds the next. Every decision about your account is informed by data, not gut feel. Your system compounds — and it never forgets.</p>
         <p>This isn't about doing more for you. It's about making your growth <strong>smarter</strong>, with a system that gets better every single day it runs on your brand.</p>
       </div>
@@ -2070,10 +2157,10 @@
   <!-- CTA Section -->
   <section class="cta-section" id="contact">
     <div class="reveal">
-      <h2 class="cta-title">Ready to Build<br>Something <span style="color:var(--cyan);">Real</span>?</h2>
-      <p class="cta-desc">We only work with 3 new brands every quarter. If there's an open spot and your brand is the right fit, we'll tell you exactly what we'd build — and you decide if it's worth it.</p>
+      <h2 class="cta-title">Ready to See What's <span style="color:var(--cyan);">Broken</span>?</h2>
+      <p class="cta-desc">Tell us about your brand. We'll tell you exactly what we'd build — and you decide if it's worth it.</p>
       <div class="cta-btn-wrap">
-        <a href="https://form.jotform.com/260644650440048" target="_blank" style="text-decoration:none;"><button class="btn-pulse">Apply for a Spot</button></a>
+        <a href="https://form.jotform.com/260644650440048" target="_blank" style="text-decoration:none;"><button class="btn-pulse">Get Perspective</button></a>
       </div>
     </div>
   </section>
